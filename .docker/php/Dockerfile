@@ -3,9 +3,10 @@ FROM php:7.2.3-fpm
 RUN apt-get update \
     && apt-get install -y --no-install-recommends vim curl debconf subversion git apt-transport-https apt-utils \
     build-essential locales acl mailutils wget zip unzip \
-    gnupg gnupg1 gnupg2
+    gnupg gnupg1 gnupg2 zlib1g-dev
 
-RUN apt-get install php7.2-zip
+RUN apt-get update && apt-get install -y zlib1g-dev \
+    && docker-php-ext-install zip
 
 COPY php.ini /etc/php/7.2.3/php.ini
 COPY php-fpm-pool.conf /etc/php/7.2.3/pool.d/www.conf
