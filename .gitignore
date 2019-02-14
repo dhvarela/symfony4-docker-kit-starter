@@ -18,5 +18,6 @@
 ###< symfony/web-server-bundle ###
 
 .idea
+.env
 
 .docker/data/*
