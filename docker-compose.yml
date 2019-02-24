@@ -4,7 +4,7 @@ services:
     build: .docker/apache
     container_name: sf4_apache
     ports:
-    - 80:80
+    - 86:80
     volumes:
     - .docker/config/vhosts:/etc/apache2/sites-enabled
     - .:/home/wwwroot/sf4
@@ -21,28 +21,27 @@ services:
       MYSQL_DATABASE: sf4
       MYSQL_USER: sf4
       MYSQL_PASSWORD: sf4
+    ports:
+    - "8083:3306"
 
   php:
     build: .docker/php
     container_name: sf4_php
     volumes:
     - .:/home/wwwroot/sf4
-    environment:
-    - maildev_host=sf4_maildev
     depends_on:
-    - maildev
     - mysql
 
-  phpmyadmin:
-    image: phpmyadmin/phpmyadmin
-    container_name: sf4_phpmyadmin
+  rabbit1:
+    image: "rabbitmq:3-management"
+    hostname: "rabbit1"
+    environment:
+      RABBITMQ_ERLANG_COOKIE: "SWQOKODSQALRPCLNMEQG"
+      RABBITMQ_DEFAULT_USER: "rabbitmq"
+      RABBITMQ_DEFAULT_PASS: "rabbitmq"
+      RABBITMQ_DEFAULT_VHOST: "/"
     ports:
-    - 8080:80
-    links:
-    - mysql
-
-  maildev:
-    image: djfarrelly/maildev
-    container_name: sf4_maildev
-    ports:
-    - 8001:80
+      - "15673:15672"
+      - "5673:5672"
+    labels:
+      NAME: "rabbitmq1"
